@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const User = require("../model/user");
+const cloudinary = require("cloudinary");
 const router = express.Router();
 const { upload } = require("../multer");
 const ErrorHandler = require("../utils/ErrorHandler");
@@ -28,25 +29,33 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     const userEmail = await User.findOne({ email });
 
     if (userEmail) {
-      const filename = req.file.filename;
-      const filePath = `uploads/${filename}`;
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.log(err);
-          res.status(500).json({ message: "Error deleting file" });
-        }
-      });
-      return next(new ErrorHandler("User already exists", 400));
+      // const filename = req.file.filename;
+      // const filePath = `uploads/${filename}`;
+      // fs.unlink(filePath, (err) => {
+      //   if (err) {
+      //     console.log(err);
+      //     res.status(500).json({ message: "Error deleting file" });
+      //   }
+      // });
+      // return next(new ErrorHandler("User already exists", 400));
+      return next(new ErrorHandler("User Already Existed with this email", 400));
     }
 
-    const filename = req.file.filename;
-    const fileUrl = path.join(filename);
+    // const filename = req.file.filename;
+    // const fileUrl = path.join(filename);
+
+    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+      folder: "avatars",
+    });
 
     const user = {
       name: name,
       email: email,
       password: password,
-      avatar: fileUrl,
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
     };
 
     const activationToken = createActivationToken(user);
@@ -229,24 +238,30 @@ router.put(
 router.put(
   "/update-avatar",
   isAuthenticated,
-  upload.single("image"),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const existsUser = await User.findById(req.user.id);
+      let existsUser = await User.findById(req.user.id);
+      if (req.body.avatar !== "") {
+        const imageId = existsUser.avatar.public_id;
 
-      const existAvatarPath = `uploads/${existsUser.avatar}`;
+        await cloudinary.v2.uploader.destroy(imageId);
 
-      fs.unlinkSync(existAvatarPath);
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+          folder: "avatars",
+          width: 150,
+        });
 
-      const fileUrl = path.join(req.file.filename);
+        existsUser.avatar = {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        };
+      }
 
-      const user = await User.findByIdAndUpdate(req.user.id, {
-        avatar: fileUrl,
-      });
+      await existsUser.save();
 
       res.status(200).json({
         success: true,
-        user,
+        user: existsUser,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -379,6 +394,54 @@ router.put(
 //     }
 //   })
 // );
+// router.put(
+//   "/update-user-document",
+//   isAuthenticated,
+//   upload.single("pdfFile"),
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const user = await User.findById(req.user.id);
+
+//       const sameDocumentType = user.documents.find(
+//         (document) => document.documentType === req.body.documentType
+//       );
+//       if (sameDocumentType) {
+//         if (req.file) {
+//           // Delete the uploaded file if it exists
+//           fs.unlinkSync(req.file.path);
+//         }
+//         return res.status(400).json({
+//           success: false,
+//           message: `${req.body.documentType} document type already exists.`,
+//         });
+//       }
+
+//       const existsDocument = user.documents.find(
+//         (document) => document._id === req.body._id
+//       );
+
+//       if (existsDocument) {
+//         Object.assign(existsDocument, req.body);
+//       } else {
+//         // add the new document to the array
+//         const newDocument = {
+//           documentType: req.body.documentType,
+//           pdfFile: req.file ? req.file.filename : null,
+//         };
+//         user.documents.push(newDocument);
+//       }
+
+//       await user.save();
+
+//       res.status(200).json({
+//         success: true,
+//         user,
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 router.put(
   "/update-user-document",
   isAuthenticated,
@@ -408,10 +471,20 @@ router.put(
       if (existsDocument) {
         Object.assign(existsDocument, req.body);
       } else {
-        // add the new document to the array
+        // Upload the file to Cloudinary
+        const cloudinaryUpload = await cloudinary.uploader.upload(req.file.path);
+
+        // const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+        //   folder: "avatars",
+        // });
+
+        // Create a new document object with Cloudinary information
         const newDocument = {
           documentType: req.body.documentType,
-          pdfFile: req.file ? req.file.filename : null,
+          pdfFile: {
+            public_id: cloudinaryUpload.public_id,
+            url: cloudinaryUpload.secure_url,
+          },
         };
         user.documents.push(newDocument);
       }

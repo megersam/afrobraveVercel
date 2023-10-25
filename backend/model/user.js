@@ -48,7 +48,14 @@ const userSchema = new mongoose.Schema({
         type: String,
       },
       pdfFile: {
-        type : String ,
+        public_id: {
+          type: String,
+          require: true,
+         },
+         url: {
+          type: String,
+          require: true
+         },
       }
     }
   ],
@@ -57,8 +64,14 @@ const userSchema = new mongoose.Schema({
     default: "user",
   },
   avatar:{
-    type: String,
-    required: true,
+     public_id: {
+      type: String,
+      require: true,
+     },
+     url: {
+      type: String,
+      require: true
+     },
  },
  createdAt:{
   type: Date,
