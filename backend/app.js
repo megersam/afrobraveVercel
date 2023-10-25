@@ -20,12 +20,12 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", express.static(path.join(__dirname,"./uploads")));
+// app.use("/", express.static(path.join(__dirname,"./uploads")));
 app.use("/test", (req, res) => {
   res.send("Backend Working!");
 });
 
-app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 // config
 if (process.env.NODE_ENV !== "PRODUCTION") {
