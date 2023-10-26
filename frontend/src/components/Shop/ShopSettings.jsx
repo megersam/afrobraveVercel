@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const ShopSettings = () => {
   const { seller } = useSelector((state) => state.seller);
-  const [avatar,setAvatar] = useState();
+  const [avatar, setAvatar] = useState();
   const [name,setName] = useState(seller && seller.name);
   const [description,setDescription] = useState(seller && seller.description ? seller.description : "");
   const [address,setAddress] = useState(seller && seller.address);
@@ -20,26 +20,30 @@ const ShopSettings = () => {
   const dispatch = useDispatch();
 
   const handleImage = async (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
 
-    const formData = new FormData();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        axios
+          .put(
+            `${server}/shop/update-shop-avatar`,
+            { avatar: reader.result },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            dispatch(loadSeller());
+            toast.success("Avatar updated successfully!");
+          })
+          .catch((error) => {
+            toast.error(error.response.data.message);
+          });
+      }
+    };
 
-    formData.append("image", e.target.files[0]);
-    
-    await axios.put(`${server}/shop/update-shop-avatar`, formData,{
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-    }).then((res) => {
-        dispatch(loadSeller());
-        toast.success("Avatar updated successfully!")
-    }).catch((error) => {
-        toast.error(error.response.data.message);
-    })
-
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const updateHandler = async (e) => {
@@ -68,7 +72,7 @@ const ShopSettings = () => {
           <div className="relative">
             <img
               src={
-                avatar ? URL.createObjectURL(avatar) : `${backend_url}/${seller.avatar}`
+                avatar ? avatar : `${seller?.avatar?.url}`
               }
               alt=""
               className="w-[200px] h-[200px] rounded-full cursor-pointer"

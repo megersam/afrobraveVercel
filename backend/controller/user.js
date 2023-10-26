@@ -11,6 +11,8 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
+const bodyParser = require('body-parser');
+
 
  // in this class we will handle the sign up page for the user and admin.
 // users parse a parameters of :
@@ -23,7 +25,8 @@ const { isAuthenticated, isAdmin } = require("../middleware/auth");
 // 5. user must activate its acount before it going to login because yet it didnt register the user.
 // 6. avtivating the user by the email sent dynamically to user.
 
-router.post("/create-user", async (req, res, next) => {
+router.post("/create-user", catchAsyncErrors(  async ( req, res, next) => {
+
   try {
     const { name, email, password, avatar } = req.body;
     const userEmail = await User.findOne({ email });
@@ -48,7 +51,7 @@ router.post("/create-user", async (req, res, next) => {
 
     const activationToken = createActivationToken(user);
 
-    const activationUrl = `https://afrobrave.vercel.app/activation/${activationToken}`;
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
     try {
       await sendMail({
@@ -66,7 +69,7 @@ router.post("/create-user", async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
-});
+}));
 
 // create activation token
 const createActivationToken = (user) => {

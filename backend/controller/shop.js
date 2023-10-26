@@ -22,22 +22,13 @@ router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
     const { email } = req.body;
     const sellerEmail = await Shop.findOne({ email });
     if (sellerEmail) {
-      // const filename = req.file.filename;
-      // const filePath = `uploads/${filename}`;
-      // fs.unlink(filePath, (err) => {
-      //   if (err) {
-      //     console.log(err);
-      //     res.status(500).json({ message: "Error deleting file" });
-      //   }
-      // });
       return next(new ErrorHandler("User already exists", 400));
     }
 
-    // const filename = req.file.filename;
-    // const fileUrl = path.join(filename);
     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
       folder: "avatars",
     });
+
 
     const seller = {
       name: req.body.name,
@@ -53,19 +44,18 @@ router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
     };
 
     const activationToken = createActivationToken(seller);
-// the activation link
-    const activationUrl = `https://afrobrave.vercel.app/seller/activation/${activationToken}`;
+
+    const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
 
     try {
       await sendMail({
         email: seller.email,
-        subject: "Activate your Account",
-        message: `Hello ${seller.name}, please click on the link to activate your account: ${activationUrl}`,
+        subject: "Activate your Shop",
+        message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
       });
-       
       res.status(201).json({
         success: true,
-        message: `please check your email:- ${seller.email} to activate your account!`,
+        message: `please check your email:- ${seller.email} to activate your shop!`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

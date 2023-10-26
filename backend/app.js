@@ -7,7 +7,7 @@ const cors = require("cors");
 const path = require("path");
 
 app.use(cors({
-  origin: ['https://afrobrave.vercel.app',],
+  origin: ['http://localhost:3000',],
    credentials: true,
 }));
    
@@ -25,7 +25,10 @@ app.use("/test", (req, res) => {
   res.send("Backend Working!");
 });
 
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+ 
+
 
 // config
 if (process.env.NODE_ENV !== "PRODUCTION") {
