@@ -41,18 +41,24 @@ const Singup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios
-      .post(`${server}/user/create-user`, { name, email, password, avatar })
-      .then((res) => {
-        toast.success(res.data.message);
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar();
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('avatar', e.target.files[0]);
+
+  axios
+    .post(`${server}/user/create-user`, formData)
+    .then((res) => {
+      toast.success(res.data.message);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setAvatar();
+    })
+    .catch((error) => {
+      toast.error(error.response.data.message);
+    });
   };
 
   return (
