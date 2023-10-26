@@ -141,6 +141,7 @@ const Singup = () => {
               </div>
             </div>
 
+            
             <div>
               <label
                 htmlFor="avatar"
@@ -150,7 +151,7 @@ const Singup = () => {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={avatar}
+                      src={URL.createObjectURL(avatar)}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />
