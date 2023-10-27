@@ -3,6 +3,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const { upload } = require("../multer");
 const Shop = require("../model/shop");
 const Event = require("../model/event");
+const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const router = express.Router();
@@ -94,7 +95,7 @@ router.delete(
       const event = await Event.findById(req.params.id);
 
       if (!product) {
-        return next(new ErrorHandler("Program is not found with this id", 404));
+        return next(new ErrorHandler("program is not found with this id", 404));
       }    
 
       for (let i = 0; 1 < product.images.length; i++) {

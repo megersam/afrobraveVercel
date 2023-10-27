@@ -72,6 +72,7 @@ export const getAllProductsShop = (id) => async (dispatch) => {
 
 // delete product of a shop
 export const deleteProduct = (id) => async (dispatch) => {
+   
   try {
     dispatch({
       type: "deleteProductRequest",
@@ -95,6 +96,7 @@ export const deleteProduct = (id) => async (dispatch) => {
     });
   }
 };
+
 
 // get all products
 export const getAllProducts = () => async (dispatch) => {

@@ -51,7 +51,7 @@ const AllEvents = () => {
         const product_name = d.replace(/\s+/g, "-");
         return (
           <>
-            <Link to={`/product/${product_name}`}>
+            <Link to={`/program/${product_name}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>

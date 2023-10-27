@@ -84,10 +84,10 @@ router.delete(
       const product = await Product.findById(req.params.id);
 
       if (!product) {
-        return next(new ErrorHandler("Program is not found with this id", 404));
+        return next(new ErrorHandler("Product is not found with this id", 404));
       }    
 
-      for (let i = 0; 1 < product.images.length; i++) {
+      for (let i = 0; i < product.images.length; i++) {
         const result = await cloudinary.v2.uploader.destroy(
           product.images[i].public_id
         );
@@ -97,7 +97,7 @@ router.delete(
 
       res.status(201).json({
         success: true,
-        message: "Program Deleted successfully!",
+        message: "Product Deleted successfully!",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
