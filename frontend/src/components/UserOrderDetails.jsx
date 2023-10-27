@@ -9,6 +9,10 @@ import { RxCross1 } from "react-icons/rx";
 import { AiFillStar, AiOutlineMessage, AiOutlineStar } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Cloudinary } from 'cloudinary-core';
+import { AdvancedImage } from 'cloudinary-react';
+
+
 
 const UserOrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
@@ -24,7 +28,14 @@ const UserOrderDetails = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
+    
   }, [dispatch]);
+
+ 
+    // Create a Cloudinary instance and configure it with your Cloudinary credentials
+   
+
+   
 
   const data = orders && orders.find((item) => item._id === id);
 
@@ -66,6 +77,8 @@ const UserOrderDetails = () => {
 
   
 
+  
+
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
       <div className="w-full flex items-center justify-between">
@@ -92,7 +105,7 @@ const UserOrderDetails = () => {
           return(
           <div className="w-full flex items-start mb-5">
             <img
-              src={`${backend_url}/${item.images[0]}`}
+              src={` ${item.images[0].url}`}
               alt=""
               className="w-[80x] h-[80px]"
             />
@@ -242,10 +255,10 @@ const UserOrderDetails = () => {
                                             <div className="ml-4 flex min-w-0 flex-1 gap-2">
                                                 {/* // src={`${backend_url}${user?.avatar}`} */}
                                                 <span className="truncate font-medium">
-                                                    {document.pdfFile ? document.pdfFile : "N/A"}</span>
+                                                    {document.pdfFile.url ? document.pdfFile.url : "N/A"}</span>
                                             </div>
                                             <div className="ml-4 flex-shrink-0">
-                                            <a href={`${backend_url}${document.pdfFile}`} target="_blank" rel="noopener noreferrer" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                            <a href={`${document.pdfFile.url}`} target="_blank" rel="noopener noreferrer" className="font-medium text-indigo-600 hover:text-indigo-500">
                                                 View
                                             </a>
                                         </div>
@@ -276,5 +289,6 @@ const UserOrderDetails = () => {
     </div>
   );
 };
+
 
 export default UserOrderDetails;
