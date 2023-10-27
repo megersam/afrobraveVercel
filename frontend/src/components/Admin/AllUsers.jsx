@@ -116,7 +116,7 @@ const AllUsers = () => {
                 <div className="flex items-center gap-x-4">
                   <img
                     className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                    src={`${backend_url}${person?.avatar}`}
+                    src={`${person?.avatar?.url}`}
                     alt=""
                   />
                   <div>

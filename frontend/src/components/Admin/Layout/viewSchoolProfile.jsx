@@ -88,7 +88,7 @@ const ViewSchool = () => {
                             <div className="w-1/2 flex-shrink-20 -space-x-2 overflow-hidden ml-30">
                                 <img
                                     className="inline-block w-48 rounded-full ring-2 ring-white ml-30"
-                                    src={`${backend_url}${shop?.avatar}`}
+                                    src={` ${shop?.avatar?.url}`}
                                     alt=""
                                 />
                             </div>

@@ -19,9 +19,9 @@ const CreateProduct = () => {
   const [tags, setTags] = useState("");
   const [adescription, setAdescription] = useState("");
   const [course, setCourse] = useState(""); 
-  const [originalPrice, setOriginalPrice] = useState();
-  const [discountPrice, setDiscountPrice] = useState();
-  const [stock, setStock] = useState();
+  const [originalPrice, setOriginalPrice] = useState("");
+  const [discountPrice, setDiscountPrice] = useState("");
+  const [stock, setStock] = useState("");
 
   useEffect(() => {
     if (error) {
@@ -182,7 +182,7 @@ const CreateProduct = () => {
             required
             rows="8"
             type="text"
-            name="couse"
+            name="course"
             value={course}
             className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setCourse(e.target.value)}
@@ -210,7 +210,7 @@ const CreateProduct = () => {
           </label>
           <input
             type="number"
-            name="price"
+            name="originalPrice"
             required
             value={originalPrice}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -226,7 +226,7 @@ const CreateProduct = () => {
           </label>
           <input
             type="number"
-            name="price"
+            name="discountPrice"
             value={discountPrice}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
@@ -241,7 +241,7 @@ const CreateProduct = () => {
           </label>
           <input
             type="number"
-            name="price"
+            name="stock"
             value={stock}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setStock(e.target.value)}

@@ -94,7 +94,7 @@ const OrderDetails = () => {
         data?.cart.map((item, index) => (
           <div className="w-full flex items-start mb-5">
             <img
-              src={`${backend_url}/${item.images[0]}`}
+              src={`${item.images[0].url}`}
               alt=""
               className="w-[80x] h-[80px]"
             />
@@ -133,7 +133,7 @@ const OrderDetails = () => {
                             <div className="w-1/2 flex-shrink-20 -space-x-2 overflow-hidden ml-30">
                                 <img
                                     className="inline-block w-48 rounded-full ring-2 ring-white ml-30"
-                                    src={`${backend_url}${data?.user?.avatar}`}
+                                    src={`${data?.user?.avatar?.url}`}
                                     alt=""
                                 />
                             </div>
@@ -220,11 +220,11 @@ const OrderDetails = () => {
                                             <div className="ml-4 flex min-w-0 flex-1 gap-2">
                                                 {/* // src={`${backend_url}${user?.avatar}`} */}
                                                 <span className="truncate font-medium">
-                                                    {document.pdfFile ? document.pdfFile : "N/A"}</span>
+                                                    {document.pdfFile.url ? document.pdfFile.url : "N/A"}</span>
                                             </div>
                                         </div>
                                         <div className="ml-4 flex-shrink-0">
-                                            <a href={`${backend_url}${document.pdfFile}`} target="_blank" rel="noopener noreferrer" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                            <a href={`${server}${document.pdfFile.url}`} target="_blank" rel="noopener noreferrer" className="font-medium text-indigo-600 hover:text-indigo-500">
                                                 View
                                             </a>
                                         </div>
